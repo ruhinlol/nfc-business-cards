@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="mercGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A1A2E" />
+      <stop offset="100%" stop-color="#16213E" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="40" fill="url(#mercGrad)" />
+  <!-- Mercury Icon -->
+  <g fill="none" stroke="#E94560" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" transform="translate(120, 100)">
+    <circle cx="80" cy="80" r="50" fill="#E94560" fill-opacity="0.2" />
+    <path d="M80 0 L80 30" />
+    <path d="M50 15 L110 15" />
+    <path d="M80 130 L80 180" />
+    <path d="M55 155 L105 155" />
+  </g>
+  <text x="200" y="340" font-family="'Inter', sans-serif" font-size="24" font-weight="bold" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">MERCURY</text>
+</svg>

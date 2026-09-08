@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "name": "Coffee Rivermania",
+    "slug": "coffee-rivermania",
+    "logo": "/uploads/coffee-rivermania-logo.svg",
+    "coverImage": "/uploads/coffee-rivermania-cover.jpg",
+    "description": "Qəhvə, desert və rahat atmosfer",
+    "googleRating": 4.4,
+    "googleReviewUrl": "https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID",
+    "googleMapsUrl": "https://maps.google.com/?q=Coffee+Rivermania+Mingəçevir",
+    "phone": "+994555555555",
+    "whatsapp": "+994555555555",
+    "instagram": "coffeerivermania",
+    "tiktok": "coffeerivermania",
+    "facebook": "coffeerivermania",
+    "website": "https://coffeerivermania.az",
+    "address": "Heydər Əliyev prospekti, Mingəçevir",
+    "openingHours": {
+      "monday": "08:00 - 23:00",
+      "tuesday": "08:00 - 23:00",
+      "wednesday": "08:00 - 23:00",
+      "thursday": "08:00 - 23:00",
+      "friday": "08:00 - 00:00",
+      "saturday": "09:00 - 00:00",
+      "sunday": "09:00 - 22:00"
+    },
+    "brandColor": "#8B6F47",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-15T10:00:00Z"
+  },
+  {
+    "id": "2",
+    "name": "Mercury Coffee",
+    "slug": "mercury-coffee",
+    "logo": "/uploads/mercury-coffee-logo.svg",
+    "coverImage": "/uploads/mercury-coffee-cover.jpg",
+    "description": "Premium qəhvə və xüsusi içkilər",
+    "googleRating": 4.7,
+    "googleReviewUrl": "https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID",
+    "googleMapsUrl": "https://maps.google.com/?q=Mercury+Coffee+Baku",
+    "phone": "+994501234567",
+    "whatsapp": "+994501234567",
+    "instagram": "mercurycoffee",
+    "tiktok": "",
+    "facebook": "mercurycoffee",
+    "website": "",
+    "address": "28 May küçəsi, Bakı",
+    "openingHours": {
+      "monday": "07:00 - 22:00",
+      "tuesday": "07:00 - 22:00",
+      "wednesday": "07:00 - 22:00",
+      "thursday": "07:00 - 22:00",
+      "friday": "07:00 - 23:00",
+      "saturday": "08:00 - 23:00",
+      "sunday": "08:00 - 21:00"
+    },
+    "brandColor": "#1a1a2e",
+    "createdAt": "2024-02-01T10:00:00Z",
+    "updatedAt": "2024-02-01T10:00:00Z"
+  }
+]

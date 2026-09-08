@@ -1,0 +1,118 @@
+[
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "904ecce8-f24c-4eac-9d66-9c2bf25b0910",
+    "timestamp": "2026-08-29T13:53:57.369Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "94c09c48-688d-40db-9889-a80ba2110f16",
+    "timestamp": "2026-08-29T13:53:57.446Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "9098e6da-be47-4dd2-82c6-010f8c43dfd4",
+    "timestamp": "2026-08-29T14:04:22.501Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "c8f73df6-5632-43e1-a219-64807c5560a5",
+    "timestamp": "2026-08-29T14:04:22.523Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "review_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "61dc38dc-a870-4093-b70e-7574a5139e4e",
+    "timestamp": "2026-08-29T14:04:25.992Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "review_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "ca25bc66-bb79-492d-a6be-0f515b3c5d29",
+    "timestamp": "2026-08-29T14:04:39.531Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3000/admin",
+    "id": "8f6dcc71-27c9-4a00-a52c-25d5501b438f",
+    "timestamp": "2026-08-29T14:05:14.735Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3000/admin",
+    "id": "ed06f436-6a24-442e-a460-daeeaabf4417",
+    "timestamp": "2026-08-29T14:05:14.760Z"
+  },
+  {
+    "businessId": "2",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "a2cdd705-e070-4168-9b88-be4181b79a9d",
+    "timestamp": "2026-08-29T14:05:34.765Z"
+  },
+  {
+    "businessId": "2",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "dd9cffe4-3256-4542-926a-1b315d5ea148",
+    "timestamp": "2026-08-29T14:05:34.786Z"
+  },
+  {
+    "businessId": "2",
+    "eventType": "instagram_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "2729702d-e92e-466d-a4a1-8e676b49d4e5",
+    "timestamp": "2026-08-29T14:05:37.975Z"
+  },
+  {
+    "businessId": "2",
+    "eventType": "facebook_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "id": "5d343df5-ef8c-4aab-8de4-06471c22b07e",
+    "timestamp": "2026-08-29T14:05:42.282Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3000/admin",
+    "id": "3d3d33f2-f151-4e27-8239-7f6bb677aa38",
+    "timestamp": "2026-08-29T14:13:42.601Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "referrer": "http://localhost:3000/admin",
+    "id": "01313274-6d18-47ad-9e8a-75317917d9c2",
+    "timestamp": "2026-08-29T14:13:42.775Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "88b090f1-59d1-49d7-990a-bfcb1f8b1f2c",
+    "timestamp": "2026-09-08T23:48:54.667Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "ccfa5e91-4b7d-4432-9a99-4ac61c94f878",
+    "timestamp": "2026-09-08T23:48:54.697Z"
+  }
+]
