@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const event = trackEvent({
+    const event = await trackEvent({
       businessId,
       eventType,
       userAgent,

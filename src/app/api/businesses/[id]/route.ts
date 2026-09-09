@@ -8,7 +8,7 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const business = getBusinessById(id);
+    const business = await getBusinessById(id);
 
     if (!business) {
       return NextResponse.json(
@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const body = await request.json();
 
-    const business = updateBusiness(id, body);
+    const business = await updateBusiness(id, body);
 
     if (!business) {
       return NextResponse.json(
@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const deleted = deleteBusiness(id);
+    const deleted = await deleteBusiness(id);
 
     if (!deleted) {
       return NextResponse.json(

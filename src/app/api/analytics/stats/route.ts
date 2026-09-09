@@ -7,10 +7,10 @@ export async function GET(request: NextRequest) {
     const businessId = searchParams.get('businessId');
 
     if (businessId && businessId !== 'all') {
-      const stats = getBusinessStats(businessId);
+      const stats = await getBusinessStats(businessId);
       return NextResponse.json(stats);
     } else {
-      const overall = getOverallStats();
+      const overall = await getOverallStats();
       return NextResponse.json(overall);
     }
   } catch (error) {

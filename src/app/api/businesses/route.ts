@@ -3,7 +3,7 @@ import { getAllBusinesses, createBusiness, generateSlug } from '@/lib/data';
 
 export async function GET() {
   try {
-    const businesses = getAllBusinesses();
+    const businesses = await getAllBusinesses();
     return NextResponse.json(businesses);
   } catch (error) {
     console.error('Error fetching businesses:', error);
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     const slug = body.slug || generateSlug(body.name);
 
-    const business = createBusiness({
+    const business = await createBusiness({
       name: body.name,
       slug,
       logo: body.logo || '',

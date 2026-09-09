@@ -8,7 +8,7 @@ interface EditBusinessProps {
 
 export default async function EditBusinessPage({ params }: EditBusinessProps) {
   const { id } = await params;
-  const business = getBusinessById(id);
+  const business = await getBusinessById(id);
 
   if (!business) {
     notFound();

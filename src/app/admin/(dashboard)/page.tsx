@@ -15,10 +15,10 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-export default function AdminDashboardPage() {
-  const businesses = getAllBusinesses();
-  const stats = getOverallStats();
-  const allEvents = getAllAnalytics();
+export default async function AdminDashboardPage() {
+  const businesses = await getAllBusinesses();
+  const stats = await getOverallStats();
+  const allEvents = await getAllAnalytics();
 
   const recentEvents = [...allEvents].reverse().slice(0, 6);
 

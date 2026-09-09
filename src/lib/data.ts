@@ -2,6 +2,7 @@ import { Business, AnalyticsEvent, BusinessStats } from '@/types/business';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
+import { Redis } from '@upstash/redis';
 
 // In-memory cache across serverless warm invocations
 declare global {
@@ -18,6 +19,30 @@ const PRIMARY_ANALYTICS_FILE = path.join(process.cwd(), 'src', 'data', 'analytic
 const TMP_BUSINESSES_FILE = path.join('/tmp', 'businesses.json');
 const TMP_ANALYTICS_FILE = path.join('/tmp', 'analytics.json');
 
+function getRedis(): Redis | null {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+
+  if (url && token) {
+    try {
+      return new Redis({ url, token });
+    } catch (e) {
+      console.error('Failed to init Redis:', e);
+    }
+  }
+  return null;
+}
+
+function getBundledBusinesses(): Business[] {
+  try {
+    if (fs.existsSync(PRIMARY_BUSINESSES_FILE)) {
+      const data = fs.readFileSync(PRIMARY_BUSINESSES_FILE, 'utf-8');
+      return JSON.parse(data) as Business[];
+    }
+  } catch {}
+  return [];
+}
+
 function readJsonFile<T>(primaryPath: string, tmpPath: string, memoryFallback?: T): T {
   if (memoryFallback && Array.isArray(memoryFallback) && memoryFallback.length > 0) {
     return memoryFallback;
@@ -32,9 +57,7 @@ function readJsonFile<T>(primaryPath: string, tmpPath: string, memoryFallback?: 
         return parsed as T;
       }
     }
-  } catch {
-    // Ignore tmp read errors
-  }
+  } catch {}
 
   // Fallback to bundled file
   try {
@@ -42,24 +65,18 @@ function readJsonFile<T>(primaryPath: string, tmpPath: string, memoryFallback?: 
       const data = fs.readFileSync(primaryPath, 'utf-8');
       return JSON.parse(data) as T;
     }
-  } catch {
-    // Ignore primary read errors
-  }
+  } catch {}
 
   return (memoryFallback || []) as unknown as T;
 }
 
 function writeJsonFile<T>(primaryPath: string, tmpPath: string, data: T): void {
-  // Try writing to primary path (works in local dev)
   let primarySuccess = false;
   try {
     fs.writeFileSync(primaryPath, JSON.stringify(data, null, 2), 'utf-8');
     primarySuccess = true;
-  } catch {
-    // Will fail on Vercel (read-only filesystem)
-  }
+  } catch {}
 
-  // If primary failed or in production, write to /tmp
   if (!primarySuccess) {
     try {
       fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
@@ -71,7 +88,26 @@ function writeJsonFile<T>(primaryPath: string, tmpPath: string, data: T): void {
 
 // ── Business CRUD ──────────────────────────────────────────
 
-export function getAllBusinesses(): Business[] {
+export async function getAllBusinesses(): Promise<Business[]> {
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const cached = await redis.get<Business[]>('nfc_businesses');
+      if (cached && Array.isArray(cached) && cached.length > 0) {
+        globalThis._businessesStore = cached;
+        return cached;
+      }
+      const initial = getBundledBusinesses();
+      if (initial.length > 0) {
+        await redis.set('nfc_businesses', initial);
+      }
+      globalThis._businessesStore = initial;
+      return initial;
+    } catch (e) {
+      console.warn('Redis read failed, falling back to local:', e);
+    }
+  }
+
   const list = readJsonFile<Business[]>(
     PRIMARY_BUSINESSES_FILE, 
     TMP_BUSINESSES_FILE, 
@@ -81,18 +117,18 @@ export function getAllBusinesses(): Business[] {
   return list;
 }
 
-export function getBusinessBySlug(slug: string): Business | undefined {
-  const businesses = getAllBusinesses();
+export async function getBusinessBySlug(slug: string): Promise<Business | undefined> {
+  const businesses = await getAllBusinesses();
   return businesses.find((b) => b.slug.toLowerCase() === slug.toLowerCase());
 }
 
-export function getBusinessById(id: string): Business | undefined {
-  const businesses = getAllBusinesses();
+export async function getBusinessById(id: string): Promise<Business | undefined> {
+  const businesses = await getAllBusinesses();
   return businesses.find((b) => b.id === id);
 }
 
-export function createBusiness(data: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>): Business {
-  const businesses = getAllBusinesses();
+export async function createBusiness(data: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>): Promise<Business> {
+  const businesses = await getAllBusinesses();
   
   // Ensure slug is unique
   let finalSlug = data.slug || generateSlug(data.name);
@@ -113,12 +149,21 @@ export function createBusiness(data: Omit<Business, 'id' | 'createdAt' | 'update
   businesses.push(newBusiness);
   globalThis._businessesStore = businesses;
 
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.set('nfc_businesses', businesses);
+    } catch (e) {
+      console.error('Failed to save business to Redis:', e);
+    }
+  }
+
   writeJsonFile(PRIMARY_BUSINESSES_FILE, TMP_BUSINESSES_FILE, businesses);
   return newBusiness;
 }
 
-export function updateBusiness(id: string, data: Partial<Business>): Business | null {
-  const businesses = getAllBusinesses();
+export async function updateBusiness(id: string, data: Partial<Business>): Promise<Business | null> {
+  const businesses = await getAllBusinesses();
   const index = businesses.findIndex((b) => b.id === id);
   if (index === -1) return null;
 
@@ -130,24 +175,44 @@ export function updateBusiness(id: string, data: Partial<Business>): Business | 
   };
 
   globalThis._businessesStore = businesses;
+
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.set('nfc_businesses', businesses);
+    } catch (e) {
+      console.error('Failed to update business in Redis:', e);
+    }
+  }
+
   writeJsonFile(PRIMARY_BUSINESSES_FILE, TMP_BUSINESSES_FILE, businesses);
   return businesses[index];
 }
 
-export function deleteBusiness(id: string): boolean {
-  const businesses = getAllBusinesses();
+export async function deleteBusiness(id: string): Promise<boolean> {
+  const businesses = await getAllBusinesses();
   const filtered = businesses.filter((b) => b.id !== id);
   if (filtered.length === businesses.length) return false;
 
   globalThis._businessesStore = filtered;
+
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.set('nfc_businesses', filtered);
+    } catch (e) {
+      console.error('Failed to delete business from Redis:', e);
+    }
+  }
+
   writeJsonFile(PRIMARY_BUSINESSES_FILE, TMP_BUSINESSES_FILE, filtered);
   return true;
 }
 
 // ── Analytics ──────────────────────────────────────────────
 
-export function trackEvent(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>): AnalyticsEvent {
-  const events = getAllAnalytics();
+export async function trackEvent(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>): Promise<AnalyticsEvent> {
+  const events = await getAllAnalytics();
   const newEvent: AnalyticsEvent = {
     ...event,
     id: uuidv4(),
@@ -155,16 +220,39 @@ export function trackEvent(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>): Ana
   };
   events.push(newEvent);
   globalThis._analyticsStore = events;
+
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.set('nfc_analytics', events);
+    } catch (e) {
+      console.error('Failed to save analytics to Redis:', e);
+    }
+  }
+
   writeJsonFile(PRIMARY_ANALYTICS_FILE, TMP_ANALYTICS_FILE, events);
   return newEvent;
 }
 
-export function getAnalyticsForBusiness(businessId: string): AnalyticsEvent[] {
-  const events = getAllAnalytics();
+export async function getAnalyticsForBusiness(businessId: string): Promise<AnalyticsEvent[]> {
+  const events = await getAllAnalytics();
   return events.filter((e) => e.businessId === businessId);
 }
 
-export function getAllAnalytics(): AnalyticsEvent[] {
+export async function getAllAnalytics(): Promise<AnalyticsEvent[]> {
+  const redis = getRedis();
+  if (redis) {
+    try {
+      const events = await redis.get<AnalyticsEvent[]>('nfc_analytics');
+      if (events && Array.isArray(events)) {
+        globalThis._analyticsStore = events;
+        return events;
+      }
+    } catch (e) {
+      console.warn('Redis analytics read failed:', e);
+    }
+  }
+
   const list = readJsonFile<AnalyticsEvent[]>(
     PRIMARY_ANALYTICS_FILE,
     TMP_ANALYTICS_FILE,
@@ -174,8 +262,8 @@ export function getAllAnalytics(): AnalyticsEvent[] {
   return list;
 }
 
-export function getBusinessStats(businessId: string): BusinessStats {
-  const events = getAnalyticsForBusiness(businessId);
+export async function getBusinessStats(businessId: string): Promise<BusinessStats> {
+  const events = await getAnalyticsForBusiness(businessId);
 
   const totalViews = events.filter((e) => e.eventType === 'page_view').length;
   const reviewClicks = events.filter((e) => e.eventType === 'review_click').length;
@@ -203,9 +291,9 @@ export function getBusinessStats(businessId: string): BusinessStats {
   };
 }
 
-export function getOverallStats(): BusinessStats & { totalBusinesses: number } {
-  const events = getAllAnalytics();
-  const businesses = getAllBusinesses();
+export async function getOverallStats(): Promise<BusinessStats & { totalBusinesses: number }> {
+  const events = await getAllAnalytics();
+  const businesses = await getAllBusinesses();
 
   const totalViews = events.filter((e) => e.eventType === 'page_view').length;
   const reviewClicks = events.filter((e) => e.eventType === 'review_click').length;

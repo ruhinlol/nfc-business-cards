@@ -13,9 +13,12 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const business = getBusinessBySlug(slug);
+  const business = await getBusinessBySlug(slug);
 
   if (!business) {
     return { title: 'Biznes tapılmadı' };
@@ -53,7 +56,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BusinessPage({ params }: PageProps) {
   const { slug } = await params;
-  const business = getBusinessBySlug(slug);
+  const business = await getBusinessBySlug(slug);
 
   if (!business) {
     notFound();
