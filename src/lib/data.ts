@@ -3,31 +3,87 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
 
-const BUSINESSES_FILE = path.join(process.cwd(), 'src', 'data', 'businesses.json');
-const ANALYTICS_FILE = path.join(process.cwd(), 'src', 'data', 'analytics.json');
-
-function readJsonFile<T>(filePath: string): T {
-  try {
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(data) as T;
-  } catch {
-    return [] as unknown as T;
-  }
+// In-memory cache across serverless warm invocations
+declare global {
+  // eslint-disable-next-line no-var
+  var _businessesStore: Business[] | undefined;
+  // eslint-disable-next-line no-var
+  var _analyticsStore: AnalyticsEvent[] | undefined;
 }
 
-function writeJsonFile<T>(filePath: string, data: T): void {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+const PRIMARY_BUSINESSES_FILE = path.join(process.cwd(), 'src', 'data', 'businesses.json');
+const PRIMARY_ANALYTICS_FILE = path.join(process.cwd(), 'src', 'data', 'analytics.json');
+
+// Vercel serverless has writable /tmp directory
+const TMP_BUSINESSES_FILE = path.join('/tmp', 'businesses.json');
+const TMP_ANALYTICS_FILE = path.join('/tmp', 'analytics.json');
+
+function readJsonFile<T>(primaryPath: string, tmpPath: string, memoryFallback?: T): T {
+  if (memoryFallback && Array.isArray(memoryFallback) && memoryFallback.length > 0) {
+    return memoryFallback;
+  }
+
+  // Try tmp first (latest updates in serverless)
+  try {
+    if (fs.existsSync(tmpPath)) {
+      const data = fs.readFileSync(tmpPath, 'utf-8');
+      const parsed = JSON.parse(data);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed as T;
+      }
+    }
+  } catch {
+    // Ignore tmp read errors
+  }
+
+  // Fallback to bundled file
+  try {
+    if (fs.existsSync(primaryPath)) {
+      const data = fs.readFileSync(primaryPath, 'utf-8');
+      return JSON.parse(data) as T;
+    }
+  } catch {
+    // Ignore primary read errors
+  }
+
+  return (memoryFallback || []) as unknown as T;
+}
+
+function writeJsonFile<T>(primaryPath: string, tmpPath: string, data: T): void {
+  // Try writing to primary path (works in local dev)
+  let primarySuccess = false;
+  try {
+    fs.writeFileSync(primaryPath, JSON.stringify(data, null, 2), 'utf-8');
+    primarySuccess = true;
+  } catch {
+    // Will fail on Vercel (read-only filesystem)
+  }
+
+  // If primary failed or in production, write to /tmp
+  if (!primarySuccess) {
+    try {
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (e) {
+      console.warn('Warning: Could not write to /tmp:', e);
+    }
+  }
 }
 
 // ── Business CRUD ──────────────────────────────────────────
 
 export function getAllBusinesses(): Business[] {
-  return readJsonFile<Business[]>(BUSINESSES_FILE);
+  const list = readJsonFile<Business[]>(
+    PRIMARY_BUSINESSES_FILE, 
+    TMP_BUSINESSES_FILE, 
+    globalThis._businessesStore
+  );
+  globalThis._businessesStore = list;
+  return list;
 }
 
 export function getBusinessBySlug(slug: string): Business | undefined {
   const businesses = getAllBusinesses();
-  return businesses.find((b) => b.slug === slug);
+  return businesses.find((b) => b.slug.toLowerCase() === slug.toLowerCase());
 }
 
 export function getBusinessById(id: string): Business | undefined {
@@ -37,14 +93,27 @@ export function getBusinessById(id: string): Business | undefined {
 
 export function createBusiness(data: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>): Business {
   const businesses = getAllBusinesses();
+  
+  // Ensure slug is unique
+  let finalSlug = data.slug || generateSlug(data.name);
+  let counter = 1;
+  while (businesses.some((b) => b.slug.toLowerCase() === finalSlug.toLowerCase())) {
+    counter++;
+    finalSlug = `${data.slug || generateSlug(data.name)}-${counter}`;
+  }
+
   const newBusiness: Business = {
     ...data,
+    slug: finalSlug,
     id: uuidv4(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
+
   businesses.push(newBusiness);
-  writeJsonFile(BUSINESSES_FILE, businesses);
+  globalThis._businessesStore = businesses;
+
+  writeJsonFile(PRIMARY_BUSINESSES_FILE, TMP_BUSINESSES_FILE, businesses);
   return newBusiness;
 }
 
@@ -59,7 +128,9 @@ export function updateBusiness(id: string, data: Partial<Business>): Business | 
     id: businesses[index].id,
     updatedAt: new Date().toISOString(),
   };
-  writeJsonFile(BUSINESSES_FILE, businesses);
+
+  globalThis._businessesStore = businesses;
+  writeJsonFile(PRIMARY_BUSINESSES_FILE, TMP_BUSINESSES_FILE, businesses);
   return businesses[index];
 }
 
@@ -67,31 +138,40 @@ export function deleteBusiness(id: string): boolean {
   const businesses = getAllBusinesses();
   const filtered = businesses.filter((b) => b.id !== id);
   if (filtered.length === businesses.length) return false;
-  writeJsonFile(BUSINESSES_FILE, filtered);
+
+  globalThis._businessesStore = filtered;
+  writeJsonFile(PRIMARY_BUSINESSES_FILE, TMP_BUSINESSES_FILE, filtered);
   return true;
 }
 
 // ── Analytics ──────────────────────────────────────────────
 
 export function trackEvent(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>): AnalyticsEvent {
-  const events = readJsonFile<AnalyticsEvent[]>(ANALYTICS_FILE);
+  const events = getAllAnalytics();
   const newEvent: AnalyticsEvent = {
     ...event,
     id: uuidv4(),
     timestamp: new Date().toISOString(),
   };
   events.push(newEvent);
-  writeJsonFile(ANALYTICS_FILE, events);
+  globalThis._analyticsStore = events;
+  writeJsonFile(PRIMARY_ANALYTICS_FILE, TMP_ANALYTICS_FILE, events);
   return newEvent;
 }
 
 export function getAnalyticsForBusiness(businessId: string): AnalyticsEvent[] {
-  const events = readJsonFile<AnalyticsEvent[]>(ANALYTICS_FILE);
+  const events = getAllAnalytics();
   return events.filter((e) => e.businessId === businessId);
 }
 
 export function getAllAnalytics(): AnalyticsEvent[] {
-  return readJsonFile<AnalyticsEvent[]>(ANALYTICS_FILE);
+  const list = readJsonFile<AnalyticsEvent[]>(
+    PRIMARY_ANALYTICS_FILE,
+    TMP_ANALYTICS_FILE,
+    globalThis._analyticsStore
+  );
+  globalThis._analyticsStore = list;
+  return list;
 }
 
 export function getBusinessStats(businessId: string): BusinessStats {
@@ -124,7 +204,7 @@ export function getBusinessStats(businessId: string): BusinessStats {
 }
 
 export function getOverallStats(): BusinessStats & { totalBusinesses: number } {
-  const events = readJsonFile<AnalyticsEvent[]>(ANALYTICS_FILE);
+  const events = getAllAnalytics();
   const businesses = getAllBusinesses();
 
   const totalViews = events.filter((e) => e.eventType === 'page_view').length;

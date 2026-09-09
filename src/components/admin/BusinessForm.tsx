@@ -26,12 +26,36 @@ interface BusinessFormProps {
   isEditing?: boolean;
 }
 
+const slugify = (text: string) => {
+  return text
+    .toLowerCase()
+    .replace(/[əƏ]/g, 'e')
+    .replace(/[öÖ]/g, 'o')
+    .replace(/[üÜ]/g, 'u')
+    .replace(/[çÇ]/g, 'c')
+    .replace(/[şŞ]/g, 's')
+    .replace(/[ğĞ]/g, 'g')
+    .replace(/[ıİ]/g, 'i')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+};
+
+const normalizeUrl = (url: string) => {
+  if (!url || !url.trim()) return '';
+  const trimmed = url.trim();
+  if (!/^https?:\/\//i.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
 export default function BusinessForm({ initialData, isEditing = false }: BusinessFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [error, setError] = useState('');
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -61,35 +85,35 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
     },
   });
 
-  const handleFileUpload = async (file: File, type: 'logo' | 'cover') => {
-    try {
-      if (type === 'logo') setUploadingLogo(true);
-      else setUploadingCover(true);
+  const handleNameChange = (name: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      name,
+      slug: (!isEditing && !slugManuallyEdited) ? slugify(name) : prev.slug,
+    }));
+  };
 
-      const data = new FormData();
-      data.append('file', file);
+  const handleFileUpload = (file: File, type: 'logo' | 'cover') => {
+    if (type === 'logo') setUploadingLogo(true);
+    else setUploadingCover(true);
 
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: data,
-      });
-
-      if (!res.ok) {
-        throw new Error('Şəkil yüklənərkən xəta baş verdi.');
-      }
-
-      const result = await res.json();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = (e.target?.result as string) || '';
       if (type === 'logo') {
-        setFormData((prev) => ({ ...prev, logo: result.url }));
+        setFormData((prev) => ({ ...prev, logo: dataUrl }));
+        setUploadingLogo(false);
       } else {
-        setFormData((prev) => ({ ...prev, coverImage: result.url }));
+        setFormData((prev) => ({ ...prev, coverImage: dataUrl }));
+        setUploadingCover(false);
       }
-    } catch (err: any) {
-      alert(err.message || 'Xəta baş verdi');
-    } finally {
+    };
+    reader.onerror = () => {
+      alert('Şəkil oxunarkən xəta baş verdi.');
       if (type === 'logo') setUploadingLogo(false);
       else setUploadingCover(false);
-    }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,6 +122,17 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
     setError('');
 
     try {
+      const preparedData = {
+        ...formData,
+        name: formData.name.trim(),
+        slug: (formData.slug || slugify(formData.name)).trim(),
+        googleReviewUrl: normalizeUrl(formData.googleReviewUrl),
+        googleMapsUrl: normalizeUrl(formData.googleMapsUrl),
+        website: normalizeUrl(formData.website),
+        phone: formData.phone.trim(),
+        whatsapp: formData.whatsapp.trim(),
+      };
+
       const endpoint = isEditing && initialData
         ? `/api/businesses/${initialData.id}`
         : '/api/businesses';
@@ -107,11 +142,11 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
       const res = await fetch(endpoint, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(preparedData),
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
+        const errorData = await res.json().catch(() => ({}));
         throw new Error(errorData.error || 'Əməliyyat uğursuz oldu.');
       }
 
@@ -172,7 +207,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
               type="text"
               required
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => handleNameChange(e.target.value)}
               placeholder="məs. Coffee Rivermania"
               className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
             />
@@ -187,7 +222,10 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
               <input
                 type="text"
                 value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                onChange={(e) => {
+                  setSlugManuallyEdited(true);
+                  setFormData({ ...formData, slug: e.target.value });
+                }}
                 placeholder="coffee-rivermania (avtomatik)"
                 className="w-full bg-transparent outline-none pl-1 text-sm text-gray-800"
               />
@@ -323,7 +361,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
             Google Rəy URL-i (googleReviewUrl) *
           </label>
           <input
-            type="url"
+            type="text"
             value={formData.googleReviewUrl}
             onChange={(e) => setFormData({ ...formData, googleReviewUrl: e.target.value })}
             placeholder="https://search.google.com/local/writereview?placeid=..."
@@ -355,7 +393,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
               Google Maps İstiqamət Linki
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.googleMapsUrl}
               onChange={(e) => setFormData({ ...formData, googleMapsUrl: e.target.value })}
               placeholder="https://maps.google.com/?q=..."
@@ -458,7 +496,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
               Vebsayt
             </label>
             <input
-              type="url"
+              type="text"
               value={formData.website}
               onChange={(e) => setFormData({ ...formData, website: e.target.value })}
               placeholder="https://coffeerivermania.az"
