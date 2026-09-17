@@ -70,41 +70,13 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
         </h2>
 
         {/* Subtitle / Prompt */}
-        <p className="text-gray-500 text-xs mt-1 mb-3.5 font-medium">
+        <p className="text-gray-500 text-xs mt-1 mb-4 font-medium">
           {isRedirecting ? (
             'Google Maps açılır, zəhmət olmasa gözləyin...'
           ) : (
             'Xidmətimizdən razı qaldınızsa, 5 ulduz verərək dəstək olun!'
           )}
         </p>
-
-        {/* ONLY 5 STARS - Big, Beautiful, Interactive Button */}
-        <button
-          type="button"
-          onClick={handleFiveStarReview}
-          disabled={isRedirecting}
-          className="w-full flex flex-col items-center justify-center py-3 px-4 rounded-2xl bg-amber-50/70 border-2 border-amber-300/80 hover:bg-amber-100/60 active:scale-95 transition-all duration-200 cursor-pointer mb-3.5 shadow-2xs group touch-manipulation"
-          aria-label="5 Ulduz ver"
-        >
-          {/* 5 Glowing Stars in a row */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {[1, 2, 3, 4, 5].map((index) => (
-              <Star
-                key={index}
-                className="h-8 w-8 sm:h-9 sm:w-9 fill-amber-400 text-amber-500 drop-shadow-sm group-hover:scale-110 transition-transform duration-200"
-                style={{
-                  animationDelay: `${index * 80}ms`,
-                }}
-              />
-            ))}
-          </div>
-
-          <div className="mt-1.5 flex items-center gap-1.5">
-            <span className="text-xs font-black text-amber-800 tracking-wide uppercase">
-              🤩 Mükəmməl • 5 Ulduz
-            </span>
-          </div>
-        </button>
 
         {/* Big Action Button (Direct Link fallback + Click Action) */}
         <a

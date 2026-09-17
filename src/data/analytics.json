@@ -282,5 +282,19 @@
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
     "id": "7f0009cf-a810-422d-8261-016aff000c4f",
     "timestamp": "2026-09-17T00:10:12.246Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "7ff617d9-f81e-4ec5-9f67-0eea8c2ef8db",
+    "timestamp": "2026-09-17T00:12:45.017Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "e53d9866-bf0b-4f1b-8f8f-c7a39607d042",
+    "timestamp": "2026-09-17T00:12:45.044Z"
   }
 ]
