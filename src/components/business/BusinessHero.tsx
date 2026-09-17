@@ -1,33 +1,30 @@
 'use client';
 
+import { useState } from 'react';
 import { Business } from '@/types/business';
 import { Star, MapPin } from 'lucide-react';
-import Image from 'next/image';
 
 interface BusinessHeroProps {
   business: Business;
 }
 
 export default function BusinessHero({ business }: BusinessHeroProps) {
+  const [logoError, setLogoError] = useState(false);
+  const [coverError, setCoverError] = useState(false);
+
+  const hasLogo = Boolean(business.logo && !logoError);
+  const hasCover = Boolean(business.coverImage && !coverError);
+
   return (
     <section className="relative">
       {/* Sleek Cover Banner */}
-      <div className="relative h-28 sm:h-36 w-full overflow-hidden">
-        {business.coverImage ? (
-          <Image
+      <div className="relative h-28 sm:h-36 w-full overflow-hidden bg-gray-100">
+        {hasCover ? (
+          <img
             src={business.coverImage}
             alt={`${business.name} cover`}
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              if (target.parentElement) {
-                target.parentElement.style.background = `linear-gradient(135deg, ${business.brandColor}22, ${business.brandColor}44)`;
-              }
-            }}
+            className="h-full w-full object-cover"
+            onError={() => setCoverError(true)}
           />
         ) : (
           <div
@@ -45,27 +42,22 @@ export default function BusinessHero({ business }: BusinessHeroProps) {
       <div className="relative -mt-10 px-5 text-center">
         {/* Logo */}
         <div className="flex justify-center">
-          <div className="relative h-20 w-20 rounded-2xl border-3 border-white shadow-lg overflow-hidden bg-white">
-            {business.logo ? (
-              <Image
+          <div className="relative h-20 w-20 rounded-2xl border-3 border-white shadow-lg overflow-hidden bg-white flex items-center justify-center">
+            {hasLogo ? (
+              <img
                 src={business.logo}
                 alt={`${business.name} logo`}
-                fill
-                className="object-cover"
-                sizes="80px"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                }}
+                className="h-full w-full object-cover"
+                onError={() => setLogoError(true)}
               />
-            ) : null}
-            {/* Fallback initial */}
-            <div
-              className="absolute inset-0 flex items-center justify-center text-3xl font-black text-white"
-              style={{ backgroundColor: business.brandColor || '#3b82f6' }}
-            >
-              {business.name.charAt(0)}
-            </div>
+            ) : (
+              <div
+                className="h-full w-full flex items-center justify-center text-3xl font-black text-white"
+                style={{ backgroundColor: business.brandColor || '#3b82f6' }}
+              >
+                {business.name.charAt(0)}
+              </div>
+            )}
           </div>
         </div>
 
