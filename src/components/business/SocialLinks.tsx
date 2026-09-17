@@ -1,115 +1,81 @@
 'use client';
 
 import { Business } from '@/types/business';
-import { Instagram, Globe, Facebook } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 import { trackEvent } from '@/lib/analytics';
 
 interface SocialLinksProps {
   business: Business;
 }
 
-// TikTok icon (not in lucide-react)
+// TikTok SVG icon
 function TikTokIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.56a8.32 8.32 0 0 0 4.76 1.5v-3.4a4.83 4.83 0 0 1-1-.03z"/>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.56a8.32 8.32 0 0 0 4.76 1.5v-3.4a4.83 4.83 0 0 1-1-.03z" />
     </svg>
   );
 }
 
-interface SocialLink {
-  type: string;
-  icon: React.ReactNode;
-  label: string;
-  handle: string;
-  url: string;
-  eventType: 'instagram_click' | 'tiktok_click' | 'facebook_click' | 'website_click';
-  bgColor: string;
-  iconColor: string;
-}
-
 export default function SocialLinks({ business }: SocialLinksProps) {
-  const links: SocialLink[] = [];
+  const hasInstagram = Boolean(business.instagram);
+  const hasTiktok = Boolean(business.tiktok);
 
-  if (business.instagram) {
-    links.push({
-      type: 'instagram',
-      icon: <Instagram className="h-5 w-5" />,
-      label: 'Instagram',
-      handle: `@${business.instagram}`,
-      url: `https://instagram.com/${business.instagram}`,
-      eventType: 'instagram_click',
-      bgColor: 'bg-gradient-to-br from-purple-50 to-pink-50',
-      iconColor: 'text-pink-600',
-    });
-  }
-
-  if (business.tiktok) {
-    links.push({
-      type: 'tiktok',
-      icon: <TikTokIcon className="h-5 w-5" />,
-      label: 'TikTok',
-      handle: `@${business.tiktok}`,
-      url: `https://tiktok.com/@${business.tiktok}`,
-      eventType: 'tiktok_click',
-      bgColor: 'bg-gray-50',
-      iconColor: 'text-gray-900',
-    });
-  }
-
-  if (business.facebook) {
-    links.push({
-      type: 'facebook',
-      icon: <Facebook className="h-5 w-5" />,
-      label: 'Facebook',
-      handle: business.facebook,
-      url: `https://facebook.com/${business.facebook}`,
-      eventType: 'facebook_click',
-      bgColor: 'bg-blue-50',
-      iconColor: 'text-blue-600',
-    });
-  }
-
-  if (business.website) {
-    links.push({
-      type: 'website',
-      icon: <Globe className="h-5 w-5" />,
-      label: 'Vebsayt',
-      handle: business.website.replace(/^https?:\/\//, ''),
-      url: business.website,
-      eventType: 'website_click',
-      bgColor: 'bg-emerald-50',
-      iconColor: 'text-emerald-600',
-    });
-  }
-
-  if (links.length === 0) return null;
+  if (!hasInstagram && !hasTiktok) return null;
 
   return (
-    <section className="px-5 animate-fade-in-up delay-300" style={{ opacity: 0 }}>
-      <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-        Bizi izləyin
-      </h2>
-      <div className="grid grid-cols-2 gap-3">
-        {links.map((link) => (
+    <section className="px-5 animate-fade-in-up delay-300">
+      <div className="flex items-center justify-between mb-2 px-1">
+        <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+          Bizi İzləyin
+        </h3>
+        <span className="text-[10px] text-gray-400 font-medium">Sosial Media</span>
+      </div>
+
+      <div className={`grid gap-2.5 ${hasInstagram && hasTiktok ? 'grid-cols-2' : 'grid-cols-1'}`}>
+        {/* Instagram Link */}
+        {hasInstagram && (
           <a
-            key={link.type}
-            href={link.url}
+            href={`https://instagram.com/${business.instagram?.replace(/^@/, '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackEvent(business.id, link.eventType)}
-            className={`${link.bgColor} rounded-xl p-4 flex flex-col items-center gap-2
-                       transition-all duration-200 active:scale-[0.97] hover:shadow-md
-                       border border-gray-100/50`}
-            id={`social-${link.type}`}
+            onClick={() => trackEvent(business.id, 'instagram_click')}
+            id="social-instagram"
+            className="flex items-center gap-2.5 p-2.5 rounded-2xl border border-pink-100/80 bg-gradient-to-r from-pink-50/70 via-purple-50/50 to-orange-50/40 hover:from-pink-100/80 hover:to-purple-100/60 active:scale-[0.97] transition-all shadow-xs"
           >
-            <div className={link.iconColor}>{link.icon}</div>
-            <div className="text-center">
-              <p className="text-sm font-semibold text-gray-800">{link.label}</p>
-              <p className="text-xs text-gray-500 truncate max-w-full">{link.handle}</p>
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white shrink-0 shadow-xs">
+              <Instagram className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 text-left">
+              <p className="text-xs font-black text-gray-900 leading-tight">Instagram</p>
+              <p className="text-[10px] font-semibold text-pink-700 truncate max-w-[120px]">
+                @{business.instagram?.replace(/^@/, '')}
+              </p>
             </div>
           </a>
-        ))}
+        )}
+
+        {/* TikTok Link */}
+        {hasTiktok && (
+          <a
+            href={`https://tiktok.com/@${business.tiktok?.replace(/^@/, '')}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent(business.id, 'tiktok_click')}
+            id="social-tiktok"
+            className="flex items-center gap-2.5 p-2.5 rounded-2xl border border-gray-200 bg-gray-50/90 hover:bg-gray-100 active:scale-[0.97] transition-all shadow-xs"
+          >
+            <div className="h-9 w-9 rounded-xl bg-black flex items-center justify-center text-white shrink-0 shadow-xs">
+              <TikTokIcon className="h-4 w-4" />
+            </div>
+            <div className="min-w-0 text-left">
+              <p className="text-xs font-black text-gray-900 leading-tight">TikTok</p>
+              <p className="text-[10px] font-semibold text-gray-600 truncate max-w-[120px]">
+                @{business.tiktok?.replace(/^@/, '')}
+              </p>
+            </div>
+          </a>
+        )}
       </div>
     </section>
   );

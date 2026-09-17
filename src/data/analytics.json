@@ -156,5 +156,75 @@
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
     "id": "9d7122f2-36e3-4cf7-af92-17f355ceac9d",
     "timestamp": "2026-09-09T01:31:34.304Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "f77444d3-9079-4d88-8280-a7b0931ccd59",
+    "timestamp": "2026-09-09T01:34:24.440Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "a7eeb4c8-3223-4e72-9b35-72af2824b01a",
+    "timestamp": "2026-09-09T01:34:24.546Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "review_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "aba06583-a478-4065-a33f-4b93040abec2",
+    "timestamp": "2026-09-09T01:34:36.545Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "011b807b-cd59-420c-82ce-14d726e49c00",
+    "timestamp": "2026-09-09T01:34:41.101Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "59ba56a0-72e1-4d85-a7a0-5b4858fb7a65",
+    "timestamp": "2026-09-09T01:34:41.210Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "72b3f099-f66b-4c2b-81d7-a606e9918923",
+    "timestamp": "2026-09-17T00:05:29.300Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "07323441-f97c-47e4-bb28-a59fa9840bf2",
+    "timestamp": "2026-09-17T00:05:29.345Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "review_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "1d17ea12-4680-43e1-b135-51c2f5f9e469",
+    "timestamp": "2026-09-17T00:05:36.213Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "f1041fae-fa11-4736-98cd-6664598f42cc",
+    "timestamp": "2026-09-17T00:05:43.902Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "page_view",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "320dc88e-59d3-445c-927b-0d72bddd7fc7",
+    "timestamp": "2026-09-17T00:05:43.966Z"
   }
 ]

@@ -60,21 +60,21 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
   };
 
   return (
-    <section id="review-card" className="px-5 animate-fade-in-up delay-200 scroll-mt-6">
+    <section id="review-card" className="px-4 sm:px-5 animate-fade-in-up delay-200 scroll-mt-6">
       <div
-        className="rounded-3xl p-6 sm:p-7 text-center card-shadow-xl border-2 border-amber-300/80 relative overflow-hidden bg-white"
+        className="rounded-3xl p-4 sm:p-5 text-center card-shadow-xl border-2 border-amber-300/80 relative overflow-hidden bg-white"
         style={{
-          boxShadow: `0 14px 36px -8px ${business.brandColor || '#3b82f6'}30`,
+          boxShadow: `0 10px 30px -8px ${business.brandColor || '#3b82f6'}25`,
         }}
       >
         {/* Top Badge */}
-        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100/90 text-amber-900 text-xs font-bold mb-3 shadow-xs">
-          <Sparkles className="h-3.5 w-3.5 text-amber-600 fill-amber-500 animate-spin-slow" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-100/90 text-amber-900 text-[11px] font-bold mb-1.5 shadow-2xs">
+          <Sparkles className="h-3 w-3 text-amber-600 fill-amber-500 animate-spin-slow" />
           <span>Google Rəy Qutusu</span>
         </div>
 
         {/* Dynamic Title */}
-        <h2 className="text-gray-900 text-xl sm:text-2xl font-black tracking-tight">
+        <h2 className="text-gray-900 text-lg sm:text-xl font-black tracking-tight leading-snug">
           {isRedirecting ? (
             <span className="text-emerald-600 flex items-center justify-center gap-2 animate-bounce">
               <span>{currentFeedback?.emoji || '❤️'}</span> Təşəkkür edirik!
@@ -85,18 +85,18 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
         </h2>
 
         {/* Subtitle / instruction */}
-        <p className="text-gray-500 text-xs sm:text-sm mt-1.5 mb-6 font-medium">
+        <p className="text-gray-500 text-xs mt-1 mb-3 font-medium">
           {isRedirecting ? (
-            'Google Maps xəritəsi açılır, zəhmət olmasa gözləyin...'
+            'Google Maps açılır, gözləyin...'
           ) : (
-            <span className="inline-flex items-center gap-1 text-amber-800 font-semibold bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/60">
+            <span className="inline-flex items-center gap-1 text-amber-800 font-semibold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60 text-[11px]">
               👇 Ulduzların üzərinə toxunaraq seçin:
             </span>
           )}
         </p>
 
         {/* TACTILE 5 STARS BUTTONS */}
-        <div className="flex justify-center items-center gap-2.5 sm:gap-3.5 mb-5 touch-manipulation">
+        <div className="flex justify-center items-center gap-2 sm:gap-3 mb-3 touch-manipulation">
           {[1, 2, 3, 4, 5].map((starIndex) => {
             const isActive = currentDisplayRating > 0 ? starIndex <= currentDisplayRating : false;
             const isJustClicked = selectedRating === starIndex;
@@ -109,26 +109,26 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
                 onMouseLeave={() => setHoveredStar(null)}
                 onClick={() => handleStarSelect(starIndex)}
                 disabled={isRedirecting}
-                className={`flex flex-col items-center justify-center h-14 w-14 sm:h-16 sm:w-16 rounded-2xl transition-all duration-200 cursor-pointer select-none touch-manipulation
+                className={`flex flex-col items-center justify-center h-12 w-12 sm:h-14 sm:w-14 rounded-2xl transition-all duration-200 cursor-pointer select-none touch-manipulation
                   ${
                     isJustClicked
-                      ? 'scale-110 bg-amber-400 text-white shadow-xl ring-4 ring-amber-300'
+                      ? 'scale-110 bg-amber-400 text-white shadow-lg ring-3 ring-amber-300'
                       : isActive
-                      ? 'bg-amber-50 border-2 border-amber-400 shadow-md scale-105'
+                      ? 'bg-amber-50 border-2 border-amber-400 shadow-xs scale-105'
                       : 'bg-gray-50 border-2 border-gray-200 hover:border-amber-300 hover:bg-amber-50/50 active:scale-90'
                   }
                 `}
                 aria-label={`${starIndex} ulduz ver`}
               >
                 <Star
-                  className={`h-7 w-7 sm:h-8 sm:w-8 transition-all duration-200 ${
+                  className={`h-6 w-6 sm:h-7 sm:w-7 transition-all duration-200 ${
                     isActive
-                      ? 'fill-amber-400 text-amber-500 scale-110 drop-shadow-sm'
+                      ? 'fill-amber-400 text-amber-500 scale-110 drop-shadow-2xs'
                       : 'fill-transparent text-gray-300 hover:text-amber-300'
                   }`}
                 />
                 <span
-                  className={`text-[11px] font-extrabold mt-0.5 ${
+                  className={`text-[10px] font-black mt-0.5 ${
                     isJustClicked
                       ? 'text-white'
                       : isActive
@@ -144,10 +144,10 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
         </div>
 
         {/* Dynamic emotion pill */}
-        <div className="min-h-7 flex items-center justify-center text-xs font-bold text-gray-700 mb-5">
+        <div className="min-h-5 flex items-center justify-center text-xs font-bold text-gray-700 mb-3">
           {currentFeedback ? (
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 animate-fade-in">
-              <span className="text-base">{currentFeedback.emoji}</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 animate-fade-in text-xs">
+              <span className="text-sm">{currentFeedback.emoji}</span>
               <span>{currentFeedback.text}</span>
             </span>
           ) : (
@@ -164,26 +164,26 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
             e.preventDefault();
             handleStarSelect(5);
           }}
-          className="relative block w-full rounded-2xl py-4 px-6 text-white font-extrabold text-base
+          className="relative block w-full rounded-2xl py-3 px-5 text-white font-extrabold text-sm sm:text-base
                      transition-all duration-200 active:scale-[0.98]
-                     hover:shadow-2xl hover:-translate-y-0.5 cursor-pointer select-none text-center"
+                     hover:shadow-xl hover:-translate-y-0.5 cursor-pointer select-none text-center"
           style={{
             backgroundColor: business.brandColor || '#3b82f6',
-            boxShadow: `0 8px 24px -4px ${business.brandColor || '#3b82f6'}70`,
+            boxShadow: `0 6px 20px -4px ${business.brandColor || '#3b82f6'}60`,
           }}
           id="review-cta-button"
         >
           <span className="relative z-10 flex items-center justify-center gap-2 tracking-wide font-black">
             {isRedirecting ? (
               <>
-                <CheckCircle2 className="h-5 w-5 text-white animate-spin" />
+                <CheckCircle2 className="h-4 w-4 text-white animate-spin" />
                 GOOGLE XƏRİTƏ AÇILIR...
               </>
             ) : (
               <>
-                <ThumbsUp className="h-5 w-5 fill-white text-white" />
+                <ThumbsUp className="h-4 w-4 fill-white text-white" />
                 MÜKƏMMƏL (5 ULDUZ VER)
-                <ExternalLink className="h-4 w-4 ml-1 opacity-90" />
+                <ExternalLink className="h-3.5 w-3.5 ml-1 opacity-90" />
               </>
             )}
           </span>
@@ -191,7 +191,7 @@ export default function ReviewCTA({ business }: ReviewCTAProps) {
         </a>
 
         {/* Guarantee text */}
-        <p className="text-[11px] text-gray-400 mt-3 flex items-center justify-center gap-1 font-medium">
+        <p className="text-[10px] text-gray-400 mt-2 flex items-center justify-center gap-1 font-medium">
           <span>⚡ Rəyiniz birbaşa Google profilində qeydə alınır</span>
         </p>
       </div>

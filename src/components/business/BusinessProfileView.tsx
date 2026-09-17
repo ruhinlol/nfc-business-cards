@@ -5,8 +5,6 @@ import { Business } from '@/types/business';
 import BusinessHero from '@/components/business/BusinessHero';
 import ReviewCTA from '@/components/business/ReviewCTA';
 import SocialLinks from '@/components/business/SocialLinks';
-import ContactActions from '@/components/business/ContactActions';
-import OpeningHours from '@/components/business/OpeningHours';
 import BusinessFooter from '@/components/business/BusinessFooter';
 import PageViewTracker from '@/components/business/PageViewTracker';
 import { Store, ArrowLeft } from 'lucide-react';
@@ -90,18 +88,19 @@ export default function BusinessProfileView({ initialBusiness, slug }: BusinessP
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="mx-auto max-w-md">
-        <PageViewTracker businessId={business.id} />
-        <BusinessHero business={business} />
+    <div className="min-h-screen bg-gray-50/50 flex flex-col justify-between">
+      <div className="mx-auto max-w-md w-full bg-white shadow-xs min-h-screen flex flex-col justify-between">
+        <div>
+          <PageViewTracker businessId={business.id} />
+          <BusinessHero business={business} />
 
-        <div className="mt-6 space-y-6">
-          <ReviewCTA business={business} />
-          <SocialLinks business={business} />
-          <ContactActions business={business} />
-          <OpeningHours hours={business.openingHours} />
-          <BusinessFooter business={business} />
+          <div className="mt-3 sm:mt-4 space-y-3 sm:space-y-3.5">
+            <ReviewCTA business={business} />
+            <SocialLinks business={business} />
+          </div>
         </div>
+
+        <BusinessFooter business={business} />
       </div>
     </div>
   );
