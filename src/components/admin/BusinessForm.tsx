@@ -7,11 +7,8 @@ import {
   Building2, 
   Star, 
   MapPin, 
-  Phone, 
-  MessageCircle, 
   Instagram, 
   Globe, 
-  Clock, 
   Upload, 
   Palette, 
   Check, 
@@ -24,6 +21,15 @@ import Link from 'next/link';
 interface BusinessFormProps {
   initialData?: Business;
   isEditing?: boolean;
+}
+
+// TikTok SVG icon
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.56a8.32 8.32 0 0 0 4.76 1.5v-3.4a4.83 4.83 0 0 1-1-.03z" />
+    </svg>
+  );
 }
 
 const slugify = (text: string) => {
@@ -128,9 +134,6 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
         slug: (formData.slug || slugify(formData.name)).trim(),
         googleReviewUrl: normalizeUrl(formData.googleReviewUrl),
         googleMapsUrl: normalizeUrl(formData.googleMapsUrl),
-        website: normalizeUrl(formData.website),
-        phone: formData.phone.trim(),
-        whatsapp: formData.whatsapp.trim(),
       };
 
       const endpoint = isEditing && initialData
@@ -173,7 +176,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-all shadow-sm active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           <Check className="h-4 w-4" />
           {loading ? 'Yadda saxlanılır...' : isEditing ? 'Dəyişiklikləri Saxla' : 'Biznesi Yarat'}
@@ -194,7 +197,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
             Əsas Məlumatlar
           </h2>
           <p className="text-xs text-gray-500 mt-1">
-            Biznesin adı, təsviri, brend rəngi və link formatı
+            Biznesin adı, təsviri, brend rəngi və logo/cover şəkilləri
           </p>
         </div>
 
@@ -308,7 +311,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
                   className="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer"
                 />
                 <p className="text-[11px] text-gray-400 mt-1">
-                  {uploadingLogo ? 'Yüklənir...' : 'PNG, SVG, JPG (maks. 5MB)'}
+                  {uploadingLogo ? 'Yüklənir...' : 'PNG, SVG, JPG'}
                 </p>
               </div>
             </div>
@@ -335,7 +338,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
                   className="text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer"
                 />
                 <p className="text-[11px] text-gray-400 mt-1">
-                  {uploadingCover ? 'Yüklənir...' : 'Banner şəkli (1200x630 tövsiyə edilir)'}
+                  {uploadingCover ? 'Yüklənir...' : 'Banner şəkli'}
                 </p>
               </div>
             </div>
@@ -343,15 +346,15 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
         </div>
       </div>
 
-      {/* Section 2: Əsas CTA - Google Rəy & Xəritə */}
+      {/* Section 2: Əsas CTA - Google Rəy & Ünvan */}
       <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/70 card-shadow space-y-6">
         <div className="border-b border-gray-100 pb-4">
           <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-amber-500" />
-            Əsas CTA (Google Rəy) və Xəritə
+            Əsas CTA (Google Rəy) və Ünvan
           </h2>
           <p className="text-xs text-gray-500 mt-1">
-            Müştərinin &quot;Rəy Yaz&quot; düyməsinə toxunduqda açılacaq birbaşa Google rəy linki
+            Müştərinin &quot;5 Ulduzlu Rəy Yaz&quot; düyməsinə toxunduqda açılacaq birbaşa Google rəy linki
           </p>
         </div>
 
@@ -403,47 +406,19 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
         </div>
       </div>
 
-      {/* Section 3: Əlaqə və Sosial Şəbəkələr */}
+      {/* Section 3: Sosial Şəbəkələr (Instagram & TikTok) */}
       <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/70 card-shadow space-y-6">
         <div className="border-b border-gray-100 pb-4">
           <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
             <Share2 className="h-5 w-5 text-indigo-500" />
-            Əlaqə və Sosial Şəbəkələr
+            Sosial Şəbəkələr (Instagram & TikTok)
           </h2>
           <p className="text-xs text-gray-500 mt-1">
-            Yalnız doldurulan sahələr müştəri profilində göstəriləcək.
+            Müştəri profilində göstəriləcək sosial media hesabları
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Phone className="h-4 w-4 text-green-600" />
-              Telefon Nömrəsi
-            </label>
-            <input
-              type="text"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              placeholder="+994555555555"
-              className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <MessageCircle className="h-4 w-4 text-emerald-600" />
-              WhatsApp Nömrəsi
-            </label>
-            <input
-              type="text"
-              value={formData.whatsapp}
-              onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-              placeholder="+994555555555"
-              className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-            />
-          </div>
-
           <div>
             <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Instagram className="h-4 w-4 text-pink-600" />
@@ -462,7 +437,8 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <TikTokIcon className="h-4 w-4 text-gray-900" />
               TikTok İstifadəçi Adı
             </label>
             <div className="flex items-center rounded-xl border border-gray-200 px-3 py-2.5 bg-gray-50 text-sm focus-within:border-gray-900 focus-within:bg-white">
@@ -476,77 +452,6 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
               />
             </div>
           </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
-              Facebook Səhifəsi / ID
-            </label>
-            <input
-              type="text"
-              value={formData.facebook}
-              onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
-              placeholder="coffeerivermania"
-              className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Globe className="h-4 w-4 text-blue-600" />
-              Vebsayt
-            </label>
-            <input
-              type="text"
-              value={formData.website}
-              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-              placeholder="https://coffeerivermania.az"
-              className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Section 4: İş Saatları */}
-      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200/70 card-shadow space-y-6">
-        <div className="border-b border-gray-100 pb-4">
-          <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <Clock className="h-5 w-5 text-amber-500" />
-            İş Saatları
-          </h2>
-          <p className="text-xs text-gray-500 mt-1">
-            Hər gün üçün açılış və bağlanış saatları (Boş buraxılan günlər göstərilməyəcək)
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[
-            { key: 'monday', label: 'Bazar ertəsi' },
-            { key: 'tuesday', label: 'Çərşənbə axşamı' },
-            { key: 'wednesday', label: 'Çərşənbə' },
-            { key: 'thursday', label: 'Cümə axşamı' },
-            { key: 'friday', label: 'Cümə' },
-            { key: 'saturday', label: 'Şənbə' },
-            { key: 'sunday', label: 'Bazar' },
-          ].map((day) => (
-            <div key={day.key} className="flex items-center justify-between gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
-              <span className="text-xs font-semibold text-gray-700 w-32">{day.label}</span>
-              <input
-                type="text"
-                value={(formData.openingHours as any)[day.key] || ''}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    openingHours: {
-                      ...formData.openingHours,
-                      [day.key]: e.target.value,
-                    },
-                  })
-                }
-                placeholder="09:00 - 22:00"
-                className="w-full bg-white rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-right outline-none focus:border-gray-900"
-              />
-            </div>
-          ))}
         </div>
       </div>
 
@@ -555,7 +460,7 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-8 py-3 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50"
+          className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-8 py-3 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-50 cursor-pointer"
         >
           <Check className="h-4 w-4" />
           {loading ? 'Yadda saxlanılır...' : isEditing ? 'Dəyişiklikləri Saxla' : 'Biznesi Yarat'}
