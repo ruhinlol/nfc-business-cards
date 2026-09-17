@@ -14,7 +14,8 @@ import {
   Check, 
   ArrowLeft,
   Share2,
-  Sparkles
+  Sparkles,
+  Link2
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -75,7 +76,9 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
     phone: initialData?.phone || '',
     whatsapp: initialData?.whatsapp || '',
     instagram: initialData?.instagram || '',
+    instagramUrl: initialData?.instagramUrl || '',
     tiktok: initialData?.tiktok || '',
+    tiktokUrl: initialData?.tiktokUrl || '',
     facebook: initialData?.facebook || '',
     website: initialData?.website || '',
     address: initialData?.address || '',
@@ -134,6 +137,10 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
         slug: (formData.slug || slugify(formData.name)).trim(),
         googleReviewUrl: normalizeUrl(formData.googleReviewUrl),
         googleMapsUrl: normalizeUrl(formData.googleMapsUrl),
+        instagram: formData.instagram.trim().replace(/^@/, ''),
+        instagramUrl: normalizeUrl(formData.instagramUrl),
+        tiktok: formData.tiktok.trim().replace(/^@/, ''),
+        tiktokUrl: normalizeUrl(formData.tiktokUrl),
       };
 
       const endpoint = isEditing && initialData
@@ -414,42 +421,92 @@ export default function BusinessForm({ initialData, isEditing = false }: Busines
             Sosial Şəbəkələr (Instagram & TikTok)
           </h2>
           <p className="text-xs text-gray-500 mt-1">
-            Müştəri profilində göstəriləcək sosial media hesabları
+            Müştəri tərəfində səliqəli görünəcək istifadəçi adı və kliklənəndə birbaşa açılacaq dəqiq yönləndirmə linki
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <Instagram className="h-4 w-4 text-pink-600" />
-              Instagram İstifadəçi Adı
-            </label>
-            <div className="flex items-center rounded-xl border border-gray-200 px-3 py-2.5 bg-gray-50 text-sm focus-within:border-gray-900 focus-within:bg-white">
-              <span className="text-gray-400 text-xs font-mono">@</span>
-              <input
-                type="text"
-                value={formData.instagram}
-                onChange={(e) => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
-                placeholder="coffeerivermania"
-                className="w-full bg-transparent outline-none pl-1 text-sm text-gray-800"
-              />
+        <div className="space-y-6">
+          {/* Instagram Settings Card */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-pink-100 bg-pink-50/30 space-y-4">
+            <div className="flex items-center gap-2 text-pink-700 font-bold text-sm">
+              <Instagram className="h-4 w-4" />
+              <span>Instagram Tənzimləmələri</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                  Görünən Ad / İstifadəçi adı
+                </label>
+                <div className="flex items-center rounded-xl border border-gray-200 px-3 py-2 bg-white text-sm focus-within:border-gray-900">
+                  <span className="text-gray-400 text-xs font-mono">@</span>
+                  <input
+                    type="text"
+                    value={formData.instagram}
+                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value.replace(/^@/, '') })}
+                    placeholder="coffeerivermania"
+                    className="w-full bg-transparent outline-none pl-1 text-sm text-gray-800"
+                  />
+                </div>
+                <p className="text-[11px] text-gray-400 mt-1">Müştərinin ekranda görəcəyi ad</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                  <Link2 className="h-3.5 w-3.5 text-gray-400" />
+                  Birbaşa Yönləndirmə Linki (URL)
+                </label>
+                <input
+                  type="text"
+                  value={formData.instagramUrl}
+                  onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+                  placeholder="https://instagram.com/coffeerivermania"
+                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm bg-white outline-none focus:border-gray-900"
+                />
+                <p className="text-[11px] text-gray-400 mt-1">Boş buraxılarsa, avtomatik istifadəçi adından link yaradılır</p>
+              </div>
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <TikTokIcon className="h-4 w-4 text-gray-900" />
-              TikTok İstifadəçi Adı
-            </label>
-            <div className="flex items-center rounded-xl border border-gray-200 px-3 py-2.5 bg-gray-50 text-sm focus-within:border-gray-900 focus-within:bg-white">
-              <span className="text-gray-400 text-xs font-mono">@</span>
-              <input
-                type="text"
-                value={formData.tiktok}
-                onChange={(e) => setFormData({ ...formData, tiktok: e.target.value.replace(/^@/, '') })}
-                placeholder="coffeerivermania"
-                className="w-full bg-transparent outline-none pl-1 text-sm text-gray-800"
-              />
+          {/* TikTok Settings Card */}
+          <div className="p-4 sm:p-5 rounded-2xl border border-gray-200 bg-gray-50/50 space-y-4">
+            <div className="flex items-center gap-2 text-gray-900 font-bold text-sm">
+              <TikTokIcon className="h-4 w-4" />
+              <span>TikTok Tənzimləmələri</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+                  Görünən Ad / İstifadəçi adı
+                </label>
+                <div className="flex items-center rounded-xl border border-gray-200 px-3 py-2 bg-white text-sm focus-within:border-gray-900">
+                  <span className="text-gray-400 text-xs font-mono">@</span>
+                  <input
+                    type="text"
+                    value={formData.tiktok}
+                    onChange={(e) => setFormData({ ...formData, tiktok: e.target.value.replace(/^@/, '') })}
+                    placeholder="coffeerivermania"
+                    className="w-full bg-transparent outline-none pl-1 text-sm text-gray-800"
+                  />
+                </div>
+                <p className="text-[11px] text-gray-400 mt-1">Müştərinin ekranda görəcəyi ad</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                  <Link2 className="h-3.5 w-3.5 text-gray-400" />
+                  Birbaşa Yönləndirmə Linki (URL)
+                </label>
+                <input
+                  type="text"
+                  value={formData.tiktokUrl}
+                  onChange={(e) => setFormData({ ...formData, tiktokUrl: e.target.value })}
+                  placeholder="https://tiktok.com/@coffeerivermania"
+                  className="w-full rounded-xl border border-gray-200 px-3.5 py-2 text-sm bg-white outline-none focus:border-gray-900"
+                />
+                <p className="text-[11px] text-gray-400 mt-1">Boş buraxılarsa, avtomatik istifadəçi adından link yaradılır</p>
+              </div>
             </div>
           </div>
         </div>

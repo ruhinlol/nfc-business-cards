@@ -296,5 +296,12 @@
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
     "id": "e53d9866-bf0b-4f1b-8f8f-c7a39607d042",
     "timestamp": "2026-09-17T00:12:45.044Z"
+  },
+  {
+    "businessId": "1",
+    "eventType": "instagram_click",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "id": "ba8b6a63-5df0-4fb2-b5e0-5b2ce40d5715",
+    "timestamp": "2026-09-17T00:24:41.484Z"
   }
 ]

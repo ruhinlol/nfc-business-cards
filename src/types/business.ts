@@ -21,7 +21,9 @@ export interface Business {
   phone: string;
   whatsapp: string;
   instagram: string;
+  instagramUrl?: string;
   tiktok: string;
+  tiktokUrl?: string;
   facebook: string;
   website: string;
   address: string;

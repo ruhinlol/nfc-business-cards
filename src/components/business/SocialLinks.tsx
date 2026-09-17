@@ -18,10 +18,36 @@ function TikTokIcon({ className }: { className?: string }) {
 }
 
 export default function SocialLinks({ business }: SocialLinksProps) {
-  const hasInstagram = Boolean(business.instagram);
-  const hasTiktok = Boolean(business.tiktok);
+  const hasInstagram = Boolean(business.instagram || business.instagramUrl);
+  const hasTiktok = Boolean(business.tiktok || business.tiktokUrl);
 
   if (!hasInstagram && !hasTiktok) return null;
+
+  // Instagram target URL (prefer custom redirect URL if provided)
+  const instagramHref = business.instagramUrl?.trim() || 
+    (business.instagram 
+      ? (business.instagram.startsWith('http') 
+          ? business.instagram 
+          : `https://instagram.com/${business.instagram.replace(/^@/, '')}`) 
+      : '#');
+
+  // Instagram displayed clean handle
+  const instagramDisplay = business.instagram 
+    ? `@${business.instagram.replace(/^@/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/\/$/, '')}`
+    : 'Instagram';
+
+  // TikTok target URL (prefer custom redirect URL if provided)
+  const tiktokHref = business.tiktokUrl?.trim() || 
+    (business.tiktok 
+      ? (business.tiktok.startsWith('http') 
+          ? business.tiktok 
+          : `https://tiktok.com/@${business.tiktok.replace(/^@/, '')}`) 
+      : '#');
+
+  // TikTok displayed clean handle
+  const tiktokDisplay = business.tiktok 
+    ? `@${business.tiktok.replace(/^@/, '').replace(/^https?:\/\/(www\.)?tiktok\.com\/@?/i, '').replace(/\/$/, '')}`
+    : 'TikTok';
 
   return (
     <section className="px-5 animate-fade-in-up delay-300">
@@ -36,7 +62,7 @@ export default function SocialLinks({ business }: SocialLinksProps) {
         {/* Instagram Link */}
         {hasInstagram && (
           <a
-            href={`https://instagram.com/${business.instagram?.replace(/^@/, '')}`}
+            href={instagramHref}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackEvent(business.id, 'instagram_click')}
@@ -49,7 +75,7 @@ export default function SocialLinks({ business }: SocialLinksProps) {
             <div className="min-w-0 text-left">
               <p className="text-xs font-black text-gray-900 leading-tight">Instagram</p>
               <p className="text-[10px] font-semibold text-pink-700 truncate max-w-[120px]">
-                @{business.instagram?.replace(/^@/, '')}
+                {instagramDisplay}
               </p>
             </div>
           </a>
@@ -58,7 +84,7 @@ export default function SocialLinks({ business }: SocialLinksProps) {
         {/* TikTok Link */}
         {hasTiktok && (
           <a
-            href={`https://tiktok.com/@${business.tiktok?.replace(/^@/, '')}`}
+            href={tiktokHref}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackEvent(business.id, 'tiktok_click')}
@@ -71,7 +97,7 @@ export default function SocialLinks({ business }: SocialLinksProps) {
             <div className="min-w-0 text-left">
               <p className="text-xs font-black text-gray-900 leading-tight">TikTok</p>
               <p className="text-[10px] font-semibold text-gray-600 truncate max-w-[120px]">
-                @{business.tiktok?.replace(/^@/, '')}
+                {tiktokDisplay}
               </p>
             </div>
           </a>
